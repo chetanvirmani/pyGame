@@ -14,7 +14,24 @@ class settings:
         self.bulletColor = (60,60,60)
         self.bulletsAllowed = 3
 
-        self.alienSpeed = 0.5
+        self.alienSpeed = 1.0
         self.fleetDropSpeed = 5
         self.fleetDirection = -1
+
+        self.speedupScale = 1.1
+
+        self.initializeDynamicSettings()
+    
+    def initializeDynamicSettings(self):
+        self.shipSpeed = 1.2
+        self.bulletSpeed = 1.0
+        self.alienSpeed = 1.0
+    
+    def increaseSpeed(self):
+        self.shipSpeed *= self.speedupScale
+        self.bulletSpeed *= self.speedupScale
+        self.alienSpeed *= self.speedupScale
+
+
+
 
