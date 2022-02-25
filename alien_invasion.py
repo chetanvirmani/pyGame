@@ -92,7 +92,6 @@ class alienInvasion:
             self.ship.movingLeft = False
 
     def fireBullet(self):
-
         if len(self.bullets) < self.settings.bulletsAllowed:
             newBullet = Bullet(self)
             self.bullets.add(newBullet)
@@ -110,19 +109,20 @@ class alienInvasion:
 
         for rowNumber in range(numberRows):
             for alienNumber in range (numberAliensX):
-                self.createAlien(alienNumber, rowNumber)
+                self.createAlien(alienNumber, rowNumber, alienWidth, alienHeight)
 
       
-    def createAlien(self,alienNumber,rowNumber):
+    def createAlien(self,alienNumber,rowNumber, alienWidth, alienHeight):
         alien = Alien(self)
-        alienWidth, alienHeight = alien.rect.size
         alien.x = alienWidth + 2 * alienWidth * alienNumber
+        alien.y = alienHeight + 10 + rowNumber * alienHeight * 2
         alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * rowNumber
+        alien.rect.y = alien.y
+
         self.aliens.add(alien)
     
     def updateAliens (self):
-        self.checkFleetEdges
+        self.checkFleetEdges()
         self.aliens.update()
         
 
@@ -135,5 +135,5 @@ class alienInvasion:
     def changeFleetDirection (self):
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleetDropSpeed
-            self.settings.fleetDirection *= -1
+        self.settings.fleetDirection *= -1
         

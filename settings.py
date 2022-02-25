@@ -15,5 +15,4 @@ class settings:
 
         self.alienSpeed = 1.0
         self.fleetDropSpeed = 10
-        self.fleetDirection = 1
-        
+        self.fleetDirection = -1
