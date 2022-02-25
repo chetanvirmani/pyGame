@@ -1,7 +1,10 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship:
+
+class Ship(Sprite):
     def __init__(self, aiGame):
+        super().__init__()
         #Initializeing the ship and getting its starting position
         self.screen = aiGame.screen
         self.settings = aiGame.settings
@@ -15,6 +18,9 @@ class Ship:
         self.movingLeft = False
 
         self.x = float(self.rect.x)
+    
+    
+
 
     def blitme(self): #draws the image to the screen at the position specified by self.rect
         self.screen.blit(self.image, self.rect)

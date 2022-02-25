@@ -82,8 +82,8 @@ class alienInvasion:
             self.createFleet()
             self.settings.increaseSpeed()
         
-        self.stats.level += 1
-        self.scoreboard.prepLevel()
+            self.stats.level += 1
+            self.scoreboard.prepLevel()
 
 
     def checkEvents(self): #Respond to keypresses and mouse events
@@ -111,14 +111,7 @@ class alienInvasion:
             self.stats.gameActive = True
             self.scoreboard.prepScore()
             self.scoreboard.prepLevel()
-
-            """
-            self.bullets.empty()
-            self.aliens.empty()
-
-            self.createFleet
-            self.ship.centerShip()
-            """
+            self.scoreboard.prepShips()
         
             pygame.mouse.set_visible(False)
 
@@ -222,6 +215,7 @@ class alienInvasion:
         if self.stats.shipsLeft > 0:
 
             self.stats.shipsLeft -= 1
+            self.scoreboard.prepShips()
             self.aliens.empty()
             self.bullets.empty()
 
