@@ -1,6 +1,8 @@
 import sys
+from time import sleep
 import pygame
 from settings import settings
+from game_stats import GameStats
 from ship import Ship
 from bullets import Bullet
 from alien import Alien
@@ -21,6 +23,7 @@ class alienInvasion:
 
         pygame.display.set_caption("Alien Invasion")
 
+        self.stats = GameStats(self)
         self.ship = Ship(self) #Create an instance of the ship after the screen has been created
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group() #Read more
@@ -36,10 +39,13 @@ class alienInvasion:
         while True:
 
             self.checkEvents()
-            self.ship.update()
-            self.bullets.update() #calling the update function in bullets
-            self.updateAliens()
-            self.updateScreen()
+
+            if self.stats.gameActive:
+                
+                self.ship.update()
+                self.bullets.update() #calling the update function in bullets
+                self.updateAliens()
+                self.updateScreen()
 
             for bullet in self.bullets.copy():
                 if bullet.rect.bottom <= 0:
@@ -95,6 +101,11 @@ class alienInvasion:
         if len(self.bullets) < self.settings.bulletsAllowed:
             newBullet = Bullet(self)
             self.bullets.add(newBullet)
+        
+        collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
+        if not self.aliens:
+            self.bullets.empty()
+            self.createFleet()
 
     def createFleet(self):
         alien = Alien(self) #Referencing from the alien file
@@ -124,6 +135,10 @@ class alienInvasion:
     def updateAliens (self):
         self.checkFleetEdges()
         self.aliens.update()
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            print("ship hit")
+            self.shipHit()
+            self.checkAliensBottom()
         
 
     def checkFleetEdges (self):
@@ -136,4 +151,31 @@ class alienInvasion:
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleetDropSpeed
         self.settings.fleetDirection *= -1
+        
+    def shipHit(self):
+
+        if self.stats.shipsLeft > 0:
+
+            self.stats.shipsLeft -= 1
+            self.aliens.empty()
+            self.bullets.empty()
+
+            self.createFleet()
+            self.ship.centerShip()
+
+            sleep(0.5)
+
+        else:
+
+            self.stats.gameActive = False
+
+    
+    def checkAliensBottom(self):
+        screen_rect = self.screen.get_rect()
+        
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                print ("Ship hit")
+                self.shipHit()
+                break
         
