@@ -38,6 +38,7 @@ class alienInvasion:
             self.checkEvents()
             self.ship.update()
             self.bullets.update() #calling the update function in bullets
+            self.updateAliens()
             self.updateScreen()
 
             for bullet in self.bullets.copy():
@@ -65,7 +66,9 @@ class alienInvasion:
         
         for bullet in self.bullets.sprites():
             bullet.drawBullet()
-            self.aliens.draw(self.screen)
+        
+        
+        self.aliens.draw(self.screen)
 
         pygame.display.flip() #makes the most recently drawn screen visible, so in the while loop it continously displays the results of events
         
@@ -96,14 +99,41 @@ class alienInvasion:
 
     def createFleet(self):
         alien = Alien(self) #Referencing from the alien file
-        alienWidth = alien.rect.width
+        alienWidth, alienHeight = alien.rect.size
         availableSpaceX = self.settings.screen_width - (2 * alienWidth)
         numberAliensX = availableSpaceX // (2*alienWidth)
+        
+        shipHeight = self.ship.rect.height
+        availableSpaceY = (self.settings.screen_height - (3 * alienHeight) - shipHeight)
 
-        for alienNumber in range (numberAliensX):
-            alien = Alien(self)
-            alien.x = alienWidth + 2 * alienWidth * alienNumber
-            alien.rect.x = alien.x
-            self.aliens.add(alien)
+        numberRows = availableSpaceY // (2 * alienHeight)
 
+        for rowNumber in range(numberRows):
+            for alienNumber in range (numberAliensX):
+                self.createAlien(alienNumber, rowNumber)
+
+      
+    def createAlien(self,alienNumber,rowNumber):
+        alien = Alien(self)
+        alienWidth, alienHeight = alien.rect.size
+        alien.x = alienWidth + 2 * alienWidth * alienNumber
+        alien.rect.x = alien.x
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * rowNumber
         self.aliens.add(alien)
+    
+    def updateAliens (self):
+        self.checkFleetEdges
+        self.aliens.update()
+        
+
+    def checkFleetEdges (self):
+        for alien in self.aliens.sprites():
+            if alien.checkEdges():
+                self.changeFleetDirection()
+                break
+    
+    def changeFleetDirection (self):
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleetDropSpeed
+            self.settings.fleetDirection *= -1
+        
