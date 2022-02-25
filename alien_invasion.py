@@ -6,6 +6,8 @@ from game_stats import GameStats
 from ship import Ship
 from bullets import Bullet
 from alien import Alien
+from button import Button
+
 
 
 class alienInvasion:
@@ -30,6 +32,8 @@ class alienInvasion:
 
         self.createFleet()
 
+        self.playButton = Button(self, "Play")
+
         
 
 
@@ -41,11 +45,12 @@ class alienInvasion:
             self.checkEvents()
 
             if self.stats.gameActive:
-                
+
                 self.ship.update()
                 self.bullets.update() #calling the update function in bullets
                 self.updateAliens()
-                self.updateScreen()
+                
+            self.updateScreen()
 
             for bullet in self.bullets.copy():
                 if bullet.rect.bottom <= 0:
@@ -75,6 +80,9 @@ class alienInvasion:
         
         
         self.aliens.draw(self.screen)
+
+        if not self.stats.gameActive:
+            self.playButton.drawButton()
 
         pygame.display.flip() #makes the most recently drawn screen visible, so in the while loop it continously displays the results of events
         
