@@ -15,3 +15,14 @@ class Alien(Sprite):
 
         self.x = float(self.rect.x)
 
+        self.settings = aiGame.settings
+    
+    def update(self):
+        self.x += self.settings.alienSpeed * self.settings.fleetDirection #the fleet direction basically makes the result positive or negative
+        self.rect.x = self.x
+    
+    def checkEdges(self):
+        screenRect = self.screen.get_rect()
+        if self.rect.right >= screenRect.right or self.rect.left <= 0:
+            return True
+
