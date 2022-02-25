@@ -151,7 +151,7 @@ class alienInvasion:
             if self.settings.bulletWidth != 300:
                 self.settings.bulletWidth = 300
             else:
-                self.settings.bulletWidth = 20
+                self.settings.bulletWidth = 7
 
     
     def checkKeyupEvents (self, event):

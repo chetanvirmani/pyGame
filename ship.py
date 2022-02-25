@@ -10,7 +10,7 @@ class Ship(Sprite):
         self.settings = aiGame.settings
         self.screen_rect = aiGame.screen.get_rect() #allows us to place the ship in the correct location on the screen
 
-        self.image = pygame.image.load("Images/ship.bmp")
+        self.image = pygame.image.load("Images/ship.png")
         self.rect = self.image.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom #Position the ship at the center of the screen
 

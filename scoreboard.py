@@ -30,7 +30,7 @@ class Scoreboard:
         
     def prepLevel(self):
         levelStr = str(self.stats.level)
-        self.levelImage = self.font.render(levelStr, True, self.textColor, self.settings.bg_color)
+        self.levelImage = self.font.render("Level: "+levelStr, True, self.textColor, self.settings.bg_color)
         self.levelRect = self.levelImage.get_rect()
         self.levelRect.right = self.scoreRect.right
         self.levelRect.top = self.scoreRect.bottom + 10
@@ -38,7 +38,7 @@ class Scoreboard:
     def prepScore(self):
         roundedScore = round (self.stats.score, -1)
         scoreStr = "{:,}".format(roundedScore)
-        self.scoreImage = self.font.render(scoreStr,True,self.textColor,self.settings.bg_color)
+        self.scoreImage = self.font.render("Score: "+scoreStr,True,self.textColor,self.settings.bg_color)
         self.scoreRect = self.scoreImage.get_rect()
         self.scoreRect.right = self.screenRect.right - 20
         self.scoreRect.top = 20
@@ -56,7 +56,7 @@ class Scoreboard:
         highScore = round (self.stats.highScore,-1)
 
         highScoreStr = "{:,}".format(highScore)
-        self.highScoreImage = self.font.render(highScoreStr, True, self.textColor, self.settings.bg_color)
+        self.highScoreImage = self.font.render("High Score: "+highScoreStr, True, self.textColor, self.settings.bg_color)
         # Center the high score at the top of the screen.
         self.highScoreRect = self.highScoreImage.get_rect()
         self.highScoreRect.centerx = self.screenRect.centerx
