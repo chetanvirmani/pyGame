@@ -2,7 +2,7 @@ import sys
 import pygame
 from settings import settings
 from ship import Ship
-
+from bullets import Bullet
 
 
 class alienInvasion:
@@ -14,14 +14,17 @@ class alienInvasion:
 
         # pygame.display.set_mode() is a surface - a surface is a part of screen where the game elements will be displayed
         self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
-        self.settings.screen_width = self.screen.get_rect().width
+        self.settings.screen_width = self.screen.get_rect().width #by doing this we are disregarding the settings, and just going for full screen
         self.settings.screen_height = self.screen.get_rect().height
-        
+        self.bg_color = (self.settings.bg_color)
+
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self) #Create an instance of the ship after the screen has been created
+        self.bullets = pygame.sprite.Group()
 
-        self.bg_color = (self.settings.bg_color)
+
+        
 
 
 
@@ -31,6 +34,7 @@ class alienInvasion:
 
             self.checkEvents()
             self.ship.update()
+            self.bullets.update() #calling the update function in bullets
             self.updateScreen()
 
             
@@ -49,10 +53,15 @@ class alienInvasion:
         
     
     def updateScreen(self):
-    
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme() #Ship appears on top of the background
+        
+        for bullet in self.bullets.sprites():
+            bullet.drawBullet()
+
         pygame.display.flip() #makes the most recently drawn screen visible, so in the while loop it continously displays the results of events
+        
+        
 
     def checkKeydownEvents (self, event):
         if event.key == pygame.K_RIGHT: #Checking for the key type
@@ -61,6 +70,8 @@ class alienInvasion:
             self.ship.movingLeft = True
         elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self.fireBullet()
 
     
     def checkKeyupEvents (self, event):
@@ -68,4 +79,8 @@ class alienInvasion:
             self.ship.movingRight = False
         elif event.key == pygame.K_LEFT:
             self.ship.movingLeft = False
+
+    def fireBullet(self):
+        newBullet = Bullet(self)
+        self.bullets.add(newBullet)
 
