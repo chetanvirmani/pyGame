@@ -1,4 +1,3 @@
-from pickle import FALSE
 import sys
 import pygame
 from settings import settings
@@ -38,10 +37,14 @@ class alienInvasion:
                 elif event.type == pygame.KEYDOWN: #If the user has pressed a key
                     if event.key == pygame.K_RIGHT: #Checking for the key type
                         self.ship.movingRight = True #Move the ship along the x axis
-                
+                    elif event.key == pygame.K_LEFT:
+                        self.ship.movingLeft = True
+
                 elif event.type  == pygame.KEYUP:
                     if event.key == pygame.K_RIGHT:
                         self.ship.movingRight = False
+                    elif event.key == pygame.K_LEFT:
+                        self.ship.movingLeft = False
 
 
 
