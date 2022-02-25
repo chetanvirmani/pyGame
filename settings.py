@@ -19,18 +19,22 @@ class settings:
         self.fleetDirection = -1
 
         self.speedupScale = 1.1
+        self.scoreScale = 1.5
+        self.alienPoints = 50
 
         self.initializeDynamicSettings()
     
     def initializeDynamicSettings(self):
         self.shipSpeed = 1.2
         self.bulletSpeed = 1.0
-        self.alienSpeed = 1.0
+        self.alienSpeed = 0.3
     
     def increaseSpeed(self):
         self.shipSpeed *= self.speedupScale
         self.bulletSpeed *= self.speedupScale
         self.alienSpeed *= self.speedupScale
+
+        self.alienPoints = int(self.alienPoints * self.scoreScale)
 
 
 

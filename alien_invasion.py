@@ -13,6 +13,7 @@ from scoreboard import Scoreboard
 
 class alienInvasion:
 
+
     def __init__(self):
 
         pygame.init()
@@ -35,6 +36,8 @@ class alienInvasion:
         self.createFleet()
 
         self.playButton = Button(self, "Play")
+
+        self.scoreboard.checkHighScore()
 
         
 
@@ -64,10 +67,23 @@ class alienInvasion:
                 self.bullets.remove(bullet)
             
         collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
+        
+
+
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alienPoints * len(aliens)
+                self.scoreboard.prepScore() 
+                """THIS COULD CREATE A PROBLEM"""
+                self.scoreboard.checkHighScore()
+        
         if not self.aliens:
             self.bullets.empty()
             self.createFleet()
             self.settings.increaseSpeed()
+        
+        self.stats.level += 1
+        self.scoreboard.prepLevel()
 
 
     def checkEvents(self): #Respond to keypresses and mouse events
@@ -93,6 +109,8 @@ class alienInvasion:
             self.settings.initializeDynamicSettings()
             self.stats.resetStats()
             self.stats.gameActive = True
+            self.scoreboard.prepScore()
+            self.scoreboard.prepLevel()
 
             """
             self.bullets.empty()
@@ -184,7 +202,6 @@ class alienInvasion:
         self.checkFleetEdges()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            print("ship hit")
             self.shipHit()
         self.checkAliensBottom()
         
