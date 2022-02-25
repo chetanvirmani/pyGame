@@ -3,6 +3,7 @@ import pygame
 from settings import settings
 from ship import Ship
 from bullets import Bullet
+from alien import Alien
 
 
 class alienInvasion:
@@ -22,7 +23,9 @@ class alienInvasion:
 
         self.ship = Ship(self) #Create an instance of the ship after the screen has been created
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group() #Read more
 
+        self.createFleet()
 
         
 
@@ -36,6 +39,10 @@ class alienInvasion:
             self.ship.update()
             self.bullets.update() #calling the update function in bullets
             self.updateScreen()
+
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
 
             
 
@@ -58,6 +65,7 @@ class alienInvasion:
         
         for bullet in self.bullets.sprites():
             bullet.drawBullet()
+            self.aliens.draw(self.screen)
 
         pygame.display.flip() #makes the most recently drawn screen visible, so in the while loop it continously displays the results of events
         
@@ -81,6 +89,21 @@ class alienInvasion:
             self.ship.movingLeft = False
 
     def fireBullet(self):
-        newBullet = Bullet(self)
-        self.bullets.add(newBullet)
 
+        if len(self.bullets) < self.settings.bulletsAllowed:
+            newBullet = Bullet(self)
+            self.bullets.add(newBullet)
+
+    def createFleet(self):
+        alien = Alien(self) #Referencing from the alien file
+        alienWidth = alien.rect.width
+        availableSpaceX = self.settings.screen_width - (2 * alienWidth)
+        numberAliensX = availableSpaceX // (2*alienWidth)
+
+        for alienNumber in range (numberAliensX):
+            alien = Alien(self)
+            alien.x = alienWidth + 2 * alienWidth * alienNumber
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
+
+        self.aliens.add(alien)
