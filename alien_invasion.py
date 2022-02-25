@@ -49,14 +49,23 @@ class alienInvasion:
                 self.ship.update()
                 self.bullets.update() #calling the update function in bullets
                 self.updateAliens()
+                self.updateBullets()
                 
             self.updateScreen()
 
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom <= 0:
-                    self.bullets.remove(bullet)
-
             
+
+
+    def updateBullets(self):
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+            
+        collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
+        if not self.aliens:
+            self.bullets.empty()
+            self.createFleet()
+
 
     def checkEvents(self): #Respond to keypresses and mouse events
 
@@ -69,6 +78,28 @@ class alienInvasion:
             
             elif event.type == pygame.KEYUP:
                 self.checkKeyupEvents(event)
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mousePosition = pygame.mouse.get_pos()
+                self.checkPlayButton(mousePosition)
+        
+    def checkPlayButton (self, mousePosition):
+        buttonClicked = self.playButton.rect.collidepoint(mousePosition)
+        
+        if buttonClicked and not self.stats.gameActive:
+            self.stats.resetStats()
+            self.stats.gameActive = True
+
+            """
+            self.bullets.empty()
+            self.aliens.empty()
+
+            self.createFleet
+            self.ship.centerShip()
+            """
+        
+            pygame.mouse.set_visible(False)
+
         
     
     def updateScreen(self):
@@ -77,6 +108,8 @@ class alienInvasion:
         
         for bullet in self.bullets.sprites():
             bullet.drawBullet()
+        
+
         
         
         self.aliens.draw(self.screen)
@@ -97,6 +130,11 @@ class alienInvasion:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self.fireBullet()
+        elif event.key == pygame.K_b:
+            if self.settings.bulletWidth != 300:
+                self.settings.bulletWidth = 300
+            else:
+                self.settings.bulletWidth = 20
 
     
     def checkKeyupEvents (self, event):
@@ -110,10 +148,6 @@ class alienInvasion:
             newBullet = Bullet(self)
             self.bullets.add(newBullet)
         
-        collisions = pygame.sprite.groupcollide(self.bullets,self.aliens,True,True)
-        if not self.aliens:
-            self.bullets.empty()
-            self.createFleet()
 
     def createFleet(self):
         alien = Alien(self) #Referencing from the alien file
@@ -146,7 +180,7 @@ class alienInvasion:
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             print("ship hit")
             self.shipHit()
-            self.checkAliensBottom()
+        self.checkAliensBottom()
         
 
     def checkFleetEdges (self):
@@ -176,13 +210,15 @@ class alienInvasion:
         else:
 
             self.stats.gameActive = False
+            pygame.mouse.set_visible(True)
+
 
     
     def checkAliensBottom(self):
-        screen_rect = self.screen.get_rect()
+        screenRect = self.screen.get_rect()
         
         for alien in self.aliens.sprites():
-            if alien.rect.bottom >= screen_rect.bottom:
+            if alien.rect.bottom >= screenRect.bottom:
                 print ("Ship hit")
                 self.shipHit()
                 break
